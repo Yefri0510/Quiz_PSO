@@ -7,6 +7,7 @@ Created on Fri Sep 26 08:54:09 2025
 
 import numpy as np
 from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
 
 # Definir parámetros del problema
 area_size = 5000  # metros
@@ -109,3 +110,26 @@ print(best_positions)
 print(f"Probabilidad cubierta maximizada: {best_prob}")
 print(f"Tiempo mínimo requerido: {best_time} minutos")
 print(f"Fitness final: {gbest_fitness}")
+
+# Generar gráfico
+fig, ax = plt.subplots(figsize=(10, 10))
+# Mapa de probabilidades como heatmap
+im = ax.imshow(probs, extent=[0, area_size, 0, area_size], origin='lower', cmap='hot', alpha=0.7)
+plt.colorbar(im, ax=ax, label='Probabilidad')
+
+# Posiciones iniciales
+ax.plot(initial_pos[0], initial_pos[1], 'go', markersize=10, label='Posición inicial')
+
+# Posiciones de drones
+ax.scatter(best_positions[:, 0], best_positions[:, 1], c='b', marker='o', label='Drones')
+
+# Radios de detección
+for pos in best_positions:
+    circle = plt.Circle(pos, detection_radius, color='b', fill=False, linestyle='--')
+    ax.add_artist(circle)
+
+ax.set_title('Mapa de Probabilidades con Posiciones Óptimas de Drones')
+ax.set_xlabel('X (metros)')
+ax.set_ylabel('Y (metros)')
+ax.legend()
+plt.show()
